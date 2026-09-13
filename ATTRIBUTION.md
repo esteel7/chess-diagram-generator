@@ -21,13 +21,15 @@ https://github.com/lichess-org/lila/tree/master/public/piece/cburnett
 
 ### License
 
-The Cburnett chess piece set distributed by Lichess is licensed under:
+The Cburnett chess piece artwork is distributed under the
+GNU General Public License v2.0 or later (GPL-2.0-or-later).
 
-**GNU General Public License v2.0 or later (GPL-2.0-or-later).**
+A copy of the license is included in this repository:
 
-The chess piece artwork remains subject to its original license and
-copyright.
+`LICENSES/GPL-2.0-or-later.txt`
 
+The chess piece artwork remains subject to its original license
+and copyright.
 ### Modifications
 
 For use in this project, the original SVG chess piece artwork was:
