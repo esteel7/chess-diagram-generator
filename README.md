@@ -30,21 +30,23 @@ The generated sheets are designed to be printed, cut, and pasted into a physical
 
 The basic workflow is:
 
-```text
-FEN positions
-      ↓
-Google Sheets
-      ↓
-Google Apps Script
-      ↓
-Chess diagrams
-      ↓
-Printable PDF
-      ↓
-Print → Cut → Paste
-```
+FEN positions → Google Sheets → Google Apps Script → Chess diagrams → Printable PDF
 
-The chess positions are stored in a Google Sheet. Google Apps Script parses each FEN, builds the corresponding board, inserts the graphical chess pieces, arranges the diagrams on printable pages, and exports the result as a PDF.
+The chess positions are stored in a Google Sheet. Google Apps Script
+parses each FEN, builds the corresponding board, inserts the graphical
+chess pieces, arranges the diagrams on printable pages, and exports the
+result as a PDF.
+
+> **Language note:** The current version uses Spanish labels in the
+> Google Sheets interface (`Imprimir`, `Orientación`, `Coordenadas`,
+> `Blancas`, `Negras`) and Spanish identifiers internally in the
+> Apps Script source code. This does not affect functionality.
+
+## Google Sheet Setup
+
+Create a sheet named:
+
+`Posiciones`
 
 ## Google Sheet Setup
 
