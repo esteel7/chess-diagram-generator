@@ -20,55 +20,62 @@ const CONFIG = {
    * TABLERO
    * ==========================================================
    *
-   * Reducimos apenas 1 px respecto
-   * de la versión anterior.
+   * 24 px × 8 = 192 px.
+   *
+   * A escala normal:
+   * 192 px ≈ 5,08 cm.
    */
-  tamanoCelda: 27,
-  tamanoPieza: 25,
+  tamanoCelda: 24,
+
+  /*
+   * Dejamos 1 px aproximadamente
+   * de margen por cada lado.
+   */
+  tamanoPieza: 22,
 
   /*
    * ==========================================================
    * COORDENADAS
    * ==========================================================
    *
-   * Aumentamos la altura inferior para
-   * que las letras a–h no se corten.
+   * Más compactas, pero perfectamente legibles.
    */
-  anchoCoordenada: 14,
-  altoCoordenada: 15,
-  tamanoFuenteCoordenada: 8,
+  anchoCoordenada: 12,
+  altoCoordenada: 14,
+  tamanoFuenteCoordenada: 7,
 
   /*
    * ==========================================================
    * ETIQUETA
    * ==========================================================
    */
-  tamanoFuenteEtiqueta: 9,
-  altoEtiqueta: 17,
+  tamanoFuenteEtiqueta: 8,
+  altoEtiqueta: 16,
 
   /*
    * ==========================================================
    * SEPARACIONES
    * ==========================================================
    *
-   * Dos columnas siguen permitiendo
-   * colocar la línea de corte al centro.
+   * Seguimos usando dos columnas y dos filas
+   * para colocar las guías de corte en el centro.
    */
   columnasSeparacion: 2,
   filasSeparacion: 2,
 
   /*
-   * Horizontalmente mantenemos
-   * la separación actual.
+   * Separación horizontal total:
+   *
+   * 12 px + 12 px = 24 px.
    */
-  anchoMitadSeparador: 14,
+  anchoMitadSeparador: 12,
 
   /*
-   * Verticalmente reducimos a:
+   * Separación vertical total:
    *
-   * 3 px + 3 px = 6 px.
+   * 4 px + 4 px = 8 px.
    */
-  altoMitadSeparador: 3,
+  altoMitadSeparador: 4,
 
   /*
    * ==========================================================
@@ -168,12 +175,10 @@ function generarPlanchaInterna() {
     SpreadsheetApp
       .getActiveSpreadsheet();
 
-
   const entrada =
     ss.getSheetByName(
       CONFIG.hojaEntrada
     );
-
 
   if (!entrada) {
 
@@ -182,18 +187,15 @@ function generarPlanchaInterna() {
     );
   }
 
-
   /*
    * Reiniciar caché.
    */
   CACHE_BYTES_PIEZAS = {};
 
-
   const posiciones =
     leerPosiciones(
       entrada
     );
-
 
   if (
     posiciones.length === 0
@@ -204,14 +206,12 @@ function generarPlanchaInterna() {
     );
   }
 
-
   /*
    * Eliminar hojas de impresión anteriores.
    */
   eliminarHojasImpresion(
     ss
   );
-
 
   /*
    * 12 diagramas por página.
@@ -222,7 +222,6 @@ function generarPlanchaInterna() {
       CONFIG.diagramasPorPagina
     );
 
-
   for (
     let pagina = 0;
     pagina < paginas;
@@ -232,31 +231,25 @@ function generarPlanchaInterna() {
     const numeroPagina =
       pagina + 1;
 
-
     const nombreHoja =
       `${CONFIG.prefijoHojaSalida} ${numeroPagina}`;
-
 
     const hoja =
       ss.insertSheet(
         nombreHoja
       );
 
-
     hoja.setHiddenGridlines(
       true
     );
-
 
     prepararHoja(
       hoja
     );
 
-
     const inicio =
       pagina *
       CONFIG.diagramasPorPagina;
-
 
     const fin =
       Math.min(
@@ -265,13 +258,11 @@ function generarPlanchaInterna() {
         posiciones.length
       );
 
-
     const posicionesPagina =
       posiciones.slice(
         inicio,
         fin
       );
-
 
     posicionesPagina.forEach(
       (posicion, indiceLocal) => {
@@ -284,13 +275,8 @@ function generarPlanchaInterna() {
       }
     );
 
-
-    /*
-     * Procesar imágenes página por página.
-     */
     SpreadsheetApp.flush();
   }
-
 
   /*
    * Mostrar primera página.
@@ -299,7 +285,6 @@ function generarPlanchaInterna() {
     ss.getSheetByName(
       `${CONFIG.prefijoHojaSalida} 1`
     );
-
 
   if (
     primeraPagina
@@ -310,9 +295,7 @@ function generarPlanchaInterna() {
     );
   }
 
-
   SpreadsheetApp.flush();
-
 
   return {
 
@@ -342,7 +325,6 @@ function eliminarHojasImpresion(
       '(?: \\d+)?$'
     );
 
-
   const hojasEliminar =
     ss
       .getSheets()
@@ -352,7 +334,6 @@ function eliminarHojasImpresion(
             hoja.getName()
           )
       );
-
 
   hojasEliminar.forEach(
     hoja => {
@@ -384,14 +365,12 @@ function leerPosiciones(
   const ultimaFila =
     hoja.getLastRow();
 
-
   if (
     ultimaFila < 2
   ) {
 
     return [];
   }
-
 
   const datos =
     hoja
@@ -403,9 +382,7 @@ function leerPosiciones(
       )
       .getValues();
 
-
   const posiciones = [];
-
 
   datos.forEach(
     (fila, indice) => {
@@ -424,7 +401,6 @@ function leerPosiciones(
 
       const coordenadas =
         fila[4] === true;
-
 
       if (
         imprimir === true &&
@@ -456,7 +432,6 @@ function leerPosiciones(
     }
   );
 
-
   return posiciones;
 }
 
@@ -476,10 +451,8 @@ function parsearFEN(
       .trim()
       .split(/\s+/)[0];
 
-
   const filas =
     posicion.split('/');
-
 
   if (
     filas.length !== 8
@@ -490,15 +463,12 @@ function parsearFEN(
     );
   }
 
-
   const tablero = [];
-
 
   filas.forEach(
     (filaFen, indiceFila) => {
 
       const fila = [];
-
 
       for (
         const caracter of filaFen
@@ -514,7 +484,6 @@ function parsearFEN(
             Number(
               caracter
             );
-
 
           for (
             let i = 0;
@@ -543,7 +512,6 @@ function parsearFEN(
         }
       }
 
-
       if (
         fila.length !== 8
       ) {
@@ -553,13 +521,11 @@ function parsearFEN(
         );
       }
 
-
       tablero.push(
         fila
       );
     }
   );
-
 
   return tablero;
 }
@@ -582,7 +548,6 @@ function prepararHoja(
   const anchoDiagrama =
     9;
 
-
   /*
    * 1 etiqueta
    * + 8 tablero
@@ -590,7 +555,6 @@ function prepararHoja(
    */
   const altoDiagrama =
     10;
-
 
   const totalColumnas =
     CONFIG.diagramasPorFila *
@@ -600,7 +564,6 @@ function prepararHoja(
     ) *
       CONFIG.columnasSeparacion;
 
-
   const totalFilas =
     CONFIG.filasPorPagina *
       altoDiagrama +
@@ -608,7 +571,6 @@ function prepararHoja(
       CONFIG.filasPorPagina - 1
     ) *
       CONFIG.filasSeparacion;
-
 
   /*
    * ==========================================================
@@ -618,7 +580,6 @@ function prepararHoja(
 
   const columnasActuales =
     hoja.getMaxColumns();
-
 
   if (
     columnasActuales <
@@ -632,10 +593,8 @@ function prepararHoja(
     );
   }
 
-
   const filasActuales =
     hoja.getMaxRows();
-
 
   if (
     filasActuales <
@@ -648,7 +607,6 @@ function prepararHoja(
         filasActuales
     );
   }
-
 
   /*
    * ==========================================================
@@ -671,7 +629,6 @@ function prepararHoja(
         CONFIG.columnasSeparacion
       );
 
-
     /*
      * Columna de números.
      */
@@ -679,7 +636,6 @@ function prepararHoja(
       inicioBloque,
       CONFIG.anchoCoordenada
     );
-
 
     /*
      * Ocho columnas del tablero.
@@ -696,7 +652,6 @@ function prepararHoja(
       );
     }
 
-
     /*
      * Dos columnas separadoras.
      */
@@ -712,12 +667,10 @@ function prepararHoja(
       const separador2 =
         separador1 + 1;
 
-
       hoja.setColumnWidth(
         separador1,
         CONFIG.anchoMitadSeparador
       );
-
 
       hoja.setColumnWidth(
         separador2,
@@ -725,7 +678,6 @@ function prepararHoja(
       );
     }
   }
-
 
   /*
    * ==========================================================
@@ -748,7 +700,6 @@ function prepararHoja(
         CONFIG.filasSeparacion
       );
 
-
     /*
      * Etiqueta.
      */
@@ -757,7 +708,6 @@ function prepararHoja(
       1,
       CONFIG.altoEtiqueta
     );
-
 
     /*
      * Tablero.
@@ -768,7 +718,6 @@ function prepararHoja(
       CONFIG.tamanoCelda
     );
 
-
     /*
      * Coordenadas inferiores.
      */
@@ -778,11 +727,8 @@ function prepararHoja(
       CONFIG.altoCoordenada
     );
 
-
     /*
      * Separación vertical.
-     *
-     * 4 px + 4 px.
      */
     if (
       bloque <
@@ -795,7 +741,6 @@ function prepararHoja(
         CONFIG.altoMitadSeparador
       );
 
-
       hoja.setRowHeightsForced(
         filaInicio + 11,
         1,
@@ -803,7 +748,6 @@ function prepararHoja(
       );
     }
   }
-
 
   /*
    * ==========================================================
@@ -824,7 +768,6 @@ function prepararHoja(
     .setVerticalAlignment(
       'middle'
     );
-
 
   /*
    * ==========================================================
@@ -858,14 +801,10 @@ function dibujarGuiasCorte(
   const altoDiagrama =
     10;
 
-
   /*
    * ==========================================================
    * GUÍAS VERTICALES
    * ==========================================================
-   *
-   * Tenemos dos columnas separadoras.
-   * Dibujamos la línea justo entre ambas.
    */
 
   for (
@@ -883,11 +822,9 @@ function dibujarGuiasCorte(
         CONFIG.columnasSeparacion
       );
 
-
     const primeraColSeparador =
       inicioBloque +
       anchoDiagrama;
-
 
     hoja
       .getRange(
@@ -908,14 +845,10 @@ function dibujarGuiasCorte(
       );
   }
 
-
   /*
    * ==========================================================
    * GUÍAS HORIZONTALES
    * ==========================================================
-   *
-   * Tenemos dos filas separadoras.
-   * Dibujamos la línea entre ambas.
    */
 
   for (
@@ -933,11 +866,9 @@ function dibujarGuiasCorte(
         CONFIG.filasSeparacion
       );
 
-
     const primeraFilaSeparador =
       filaInicio +
       altoDiagrama;
-
 
     hoja
       .getRange(
@@ -976,13 +907,11 @@ function dibujarDiagrama(
     indice %
     CONFIG.diagramasPorFila;
 
-
   const bloqueFila =
     Math.floor(
       indice /
       CONFIG.diagramasPorFila
     );
-
 
   const anchoDiagrama =
     9;
@@ -990,36 +919,29 @@ function dibujarDiagrama(
   const altoDiagrama =
     10;
 
-
   const anchoBloque =
     anchoDiagrama +
     CONFIG.columnasSeparacion;
 
-
   const altoBloque =
     altoDiagrama +
     CONFIG.filasSeparacion;
-
 
   const colInicio =
     1 +
     bloqueCol *
       anchoBloque;
 
-
   const filaInicio =
     1 +
     bloqueFila *
       altoBloque;
 
-
   const colTablero =
     colInicio + 1;
 
-
   const filaTablero =
     filaInicio + 1;
-
 
   /*
    * ==========================================================
@@ -1035,9 +957,7 @@ function dibujarDiagrama(
       9
     );
 
-
   rangoEtiqueta.merge();
-
 
   rangoEtiqueta
     .setValue(
@@ -1059,7 +979,6 @@ function dibujarDiagrama(
       'middle'
     );
 
-
   /*
    * ==========================================================
    * PARSEAR FEN
@@ -1067,7 +986,6 @@ function dibujarDiagrama(
    */
 
   let tablero;
-
 
   try {
 
@@ -1089,7 +1007,6 @@ function dibujarDiagrama(
     return;
   }
 
-
   /*
    * ==========================================================
    * ORIENTACIÓN
@@ -1101,12 +1018,10 @@ function dibujarDiagrama(
       .orientacion
       .toLowerCase();
 
-
   const negrasAbajo =
     orientacion.startsWith(
       'n'
     );
-
 
   if (
     negrasAbajo
@@ -1124,7 +1039,6 @@ function dibujarDiagrama(
         );
   }
 
-
   /*
    * ==========================================================
    * TABLERO
@@ -1139,7 +1053,6 @@ function dibujarDiagrama(
       8
     );
 
-
   rangoTablero
     .clearContent()
     .setBackgrounds(
@@ -1151,7 +1064,6 @@ function dibujarDiagrama(
     .setVerticalAlignment(
       'middle'
     );
-
 
   /*
    * ==========================================================
@@ -1167,7 +1079,6 @@ function dibujarDiagrama(
     colInicio,
     colTablero
   );
-
 
   /*
    * ==========================================================
@@ -1190,7 +1101,6 @@ function dibujarDiagrama(
       const pieza =
         tablero[fila][columna];
 
-
       if (
         pieza !== ''
       ) {
@@ -1204,7 +1114,6 @@ function dibujarDiagrama(
       }
     }
   }
-
 
   /*
    * Borde sólido del tablero.
@@ -1238,7 +1147,6 @@ function dibujarCoordenadas(
   const filaLetras =
     filaTablero + 8;
 
-
   hoja
     .getRange(
       filaTablero,
@@ -1247,7 +1155,6 @@ function dibujarCoordenadas(
       1
     )
     .clearContent();
-
 
   hoja
     .getRange(
@@ -1258,14 +1165,12 @@ function dibujarCoordenadas(
     )
     .clearContent();
 
-
   if (
     !mostrar
   ) {
 
     return;
   }
-
 
   const rangos =
     negrasAbajo
@@ -1290,7 +1195,6 @@ function dibujarCoordenadas(
           ['1']
         ];
 
-
   const archivos =
     negrasAbajo
       ? [[
@@ -1313,7 +1217,6 @@ function dibujarCoordenadas(
           'g',
           'h'
         ]];
-
 
   hoja
     .getRange(
@@ -1338,29 +1241,28 @@ function dibujarCoordenadas(
       'middle'
     );
 
-
-hoja
-  .getRange(
-    filaLetras,
-    colTablero,
-    1,
-    8
-  )
-  .setValues(
-    archivos
-  )
-  .setFontSize(
-    CONFIG.tamanoFuenteCoordenada
-  )
-  .setFontColor(
-    CONFIG.colorTexto
-  )
-  .setHorizontalAlignment(
-    'center'
-  )
-  .setVerticalAlignment(
-    'middle'
-  );
+  hoja
+    .getRange(
+      filaLetras,
+      colTablero,
+      1,
+      8
+    )
+    .setValues(
+      archivos
+    )
+    .setFontSize(
+      CONFIG.tamanoFuenteCoordenada
+    )
+    .setFontColor(
+      CONFIG.colorTexto
+    )
+    .setHorizontalAlignment(
+      'center'
+    )
+    .setVerticalAlignment(
+      'middle'
+    );
 }
 
 
@@ -1374,7 +1276,6 @@ function crearMatrizColoresTablero() {
 
   const fondos = [];
 
-
   for (
     let fila = 0;
     fila < 8;
@@ -1382,7 +1283,6 @@ function crearMatrizColoresTablero() {
   ) {
 
     const filaColores = [];
-
 
     for (
       let columna = 0;
@@ -1396,7 +1296,6 @@ function crearMatrizColoresTablero() {
           columna
         ) % 2 === 0;
 
-
       filaColores.push(
         clara
           ? CONFIG.colorClaro
@@ -1404,12 +1303,10 @@ function crearMatrizColoresTablero() {
       );
     }
 
-
     fondos.push(
       filaColores
     );
   }
-
 
   return fondos;
 }
@@ -1436,12 +1333,10 @@ function obtenerBytesPieza(
     ];
   }
 
-
   const base64 =
     PIEZAS[
       pieza
     ];
-
 
   if (
     !base64
@@ -1452,17 +1347,14 @@ function obtenerBytesPieza(
     );
   }
 
-
   const bytes =
     Utilities.base64Decode(
       base64
     );
 
-
   CACHE_BYTES_PIEZAS[
     pieza
   ] = bytes;
-
 
   return bytes;
 }
@@ -1482,7 +1374,6 @@ function crearBlobPieza(
     obtenerBytesPieza(
       pieza
     );
-
 
   return Utilities.newBlob(
     bytes,
@@ -1508,10 +1399,8 @@ function insertarPiezaEnCelda(
   const maxIntentos =
     3;
 
-
   let ultimoError =
     null;
-
 
   for (
     let intento = 1;
@@ -1526,14 +1415,12 @@ function insertarPiezaEnCelda(
           pieza
         );
 
-
       const imagen =
         hoja.insertImage(
           blob,
           columna,
           fila
         );
-
 
       imagen
         .setWidth(
@@ -1549,15 +1436,12 @@ function insertarPiezaEnCelda(
           1
         );
 
-
       return;
-
 
     } catch (error) {
 
       ultimoError =
         error;
-
 
       if (
         intento <
@@ -1570,7 +1454,6 @@ function insertarPiezaEnCelda(
       }
     }
   }
-
 
   throw new Error(
     `No se pudo insertar la pieza "${pieza}" ` +
@@ -1598,18 +1481,14 @@ function generarPlanchaYPDF() {
     const resultado =
       generarPlanchaInterna();
 
-
     SpreadsheetApp.flush();
-
 
     Utilities.sleep(
       1500
     );
 
-
     const archivoPDF =
       exportarPDFInterno();
-
 
     SpreadsheetApp
       .getUi()
@@ -1644,7 +1523,6 @@ function exportarPDF() {
 
     const archivoPDF =
       exportarPDFInterno();
-
 
     SpreadsheetApp
       .getUi()
@@ -1682,7 +1560,6 @@ function obtenerHojasImpresion(
       ' (\\d+)$'
     );
 
-
   const hojas =
     ss
       .getSheets()
@@ -1692,7 +1569,6 @@ function obtenerHojasImpresion(
             hoja.getName()
           )
       );
-
 
   hojas.sort(
     (a, b) => {
@@ -1704,7 +1580,6 @@ function obtenerHojasImpresion(
             .match(regex)[1]
         );
 
-
       const numeroB =
         Number(
           b
@@ -1712,14 +1587,12 @@ function obtenerHojasImpresion(
             .match(regex)[1]
         );
 
-
       return (
         numeroA -
         numeroB
       );
     }
   );
-
 
   return hojas;
 }
@@ -1737,12 +1610,10 @@ function exportarPDFInterno() {
     SpreadsheetApp
       .getActiveSpreadsheet();
 
-
   const hojasImpresion =
     obtenerHojasImpresion(
       ss
     );
-
 
   if (
     hojasImpresion.length === 0
@@ -1753,15 +1624,12 @@ function exportarPDFInterno() {
     );
   }
 
-
   const hojaActivaOriginal =
     ss.getActiveSheet();
-
 
   ss.setActiveSheet(
     hojasImpresion[0]
   );
-
 
   const idsImpresion =
     new Set(
@@ -1771,13 +1639,10 @@ function exportarPDFInterno() {
       )
     );
 
-
   const hojasOcultadasTemporalmente =
     [];
 
-
   let archivoPDF;
-
 
   try {
 
@@ -1802,24 +1667,26 @@ function exportarPDFInterno() {
         }
       );
 
-
     SpreadsheetApp.flush();
-
 
     Utilities.sleep(
       750
     );
-
 
     /*
      * ========================================================
      * PDF CARTA
      * ========================================================
      *
-     * scale=4 = ajustar hoja completa a una página.
+     * IMPORTANTE:
      *
-     * Reducimos especialmente los márgenes superior
-     * e inferior.
+     * scale=1 = escala normal / 100 %.
+     *
+     * Esto evita que Google agrande automáticamente
+     * los diagramas para llenar toda la página.
+     *
+     * Con casillas de 24 px, cada tablero debería quedar
+     * aproximadamente en 5,08 × 5,08 cm.
      */
     const parametros = [
 
@@ -1829,7 +1696,10 @@ function exportarPDFInterno() {
 
       'portrait=true',
 
-      'scale=4',
+      /*
+       * Escala normal.
+       */
+      'scale=1',
 
       'sheetnames=false',
 
@@ -1842,17 +1712,19 @@ function exportarPDFInterno() {
       'fzr=false',
 
       /*
-       * Márgenes reducidos.
+       * Márgenes.
+       *
+       * Hay suficiente espacio porque ahora
+       * los diagramas son más compactos.
        */
-      'top_margin=0.12',
+      'top_margin=0.20',
 
-      'bottom_margin=0.12',
+      'bottom_margin=0.20',
 
-      'left_margin=0.20',
+      'left_margin=0.25',
 
-      'right_margin=0.20'
+      'right_margin=0.25'
     ];
-
 
     const url =
       'https://docs.google.com/spreadsheets/d/' +
@@ -1860,11 +1732,9 @@ function exportarPDFInterno() {
       '/export?' +
       parametros.join('&');
 
-
     const token =
       ScriptApp
         .getOAuthToken();
-
 
     const respuesta =
       UrlFetchApp.fetch(
@@ -1883,11 +1753,9 @@ function exportarPDFInterno() {
         }
       );
 
-
     const codigo =
       respuesta
         .getResponseCode();
-
 
     if (
       codigo !== 200
@@ -1898,7 +1766,6 @@ function exportarPDFInterno() {
       );
     }
 
-
     const nombreArchivo =
       `Plancha_Ajedrez_${
         Utilities.formatDate(
@@ -1908,7 +1775,6 @@ function exportarPDFInterno() {
         )
       }.pdf`;
 
-
     const blob =
       respuesta
         .getBlob()
@@ -1916,17 +1782,14 @@ function exportarPDFInterno() {
           nombreArchivo
         );
 
-
     const archivoSpreadsheet =
       DriveApp.getFileById(
         ss.getId()
       );
 
-
     const padres =
       archivoSpreadsheet
         .getParents();
-
 
     if (
       padres.hasNext()
@@ -1934,7 +1797,6 @@ function exportarPDFInterno() {
 
       const carpeta =
         padres.next();
-
 
       archivoPDF =
         carpeta.createFile(
@@ -1949,7 +1811,6 @@ function exportarPDFInterno() {
         );
     }
 
-
   } finally {
 
     hojasOcultadasTemporalmente.forEach(
@@ -1958,7 +1819,6 @@ function exportarPDFInterno() {
         hoja.showSheet();
       }
     );
-
 
     if (
       hojaActivaOriginal
@@ -1978,10 +1838,8 @@ function exportarPDFInterno() {
       }
     }
 
-
     SpreadsheetApp.flush();
   }
-
 
   return archivoPDF;
 }
