@@ -364,9 +364,18 @@ PDF generation uses Google Sheets' own export functionality.
 
 ## License
 
-The source code is released under the terms specified in [`LICENSE`](LICENSE).
+The source code of Chess Diagram Sheet Generator is released under
+the [MIT License](LICENSE).
 
-Chess-piece artwork may be subject to a separate license. See [`ATTRIBUTION.md`](ATTRIBUTION.md) for details.
+The bundled Cburnett chess piece artwork was created by
+Colin M. L. Burnett and is distributed under the
+GPL-2.0-or-later license.
+
+The chess piece artwork is third-party content and is not covered
+by the MIT License applied to this project's original source code.
+
+See [ATTRIBUTION.md](ATTRIBUTION.md) for attribution, source,
+licensing information, and modifications made for this project.
 
 ## Version
 
